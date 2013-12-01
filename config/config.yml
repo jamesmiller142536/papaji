@@ -1,0 +1,24 @@
+database:
+  driver: pdo_mysql
+  host: localhost
+  port: 3306
+  name: ccv
+  user: root
+  password: ''
+debug: false
+features:
+  bank: true
+  tickets: true
+log_transactions: true
+pastebin_id: null
+locale: en
+bank:
+  initial_balance: 100
+  daily_amount: 20
+site_name: CCV
+executable_name: ccv
+script:
+  verbs:
+    get: get
+    put: put
+    list: list

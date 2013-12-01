@@ -1,0 +1,79 @@
+function create(sType, sUsername, iPin) 
+    postData = { }
+    postData["type"] = sType
+    postData["username"] = sUsername
+    postData["pin"] = iPin
+    local response = doPost("{{ url('tickets.create') }}", postData)
+    if response then
+        return response;
+    else
+        return 0
+    end
+end
+
+function use(sType, iId) 
+    postData = { }
+    postData["id"] = iId;
+    postData["type"] = sType
+    local response = doPost("{{ url('tickets.use') }}", postData)
+    if response then
+        if response == "OK" then
+            return true
+        else
+            return false
+        end
+    else
+        return false
+    end
+end
+
+function check(sType, iId)
+    postData = { }
+    postData["id"] = iId;
+    postData["type"] = sType
+    local response = doPost("{{ url('tickets.check') }}", postData)
+    if response then
+        if response == "OK" then
+            return true
+        else
+            return false
+        end
+    else
+        return false
+    end
+end
+
+function getAmount(sType)
+    postData = { type=sType }
+    local response = doPost("{{ url('tickets.type.price') }}", postData)
+    if response then
+        if tonumber(response) then
+            return tonumber(response)
+        else
+            return false
+        end
+    else
+        return false
+    end
+end
+
+function doPost(url, postData)
+    if not postData then
+        postData = { }
+    end
+    postString = ""
+    for key, value in pairs(postData) do
+        postString = postString .. "&"..textutils.urlEncode(key).."="..textutils.urlEncode(value)
+    end
+    local response = http.post(
+        url,
+        postString
+      )
+    if response then
+        local sResponse = response.readAll()
+        response.close()
+        return sResponse;
+    else
+        return false
+    end
+end

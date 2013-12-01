@@ -1,0 +1,16 @@
+{% form_theme form 'form.html.twig' %}
+{{ form_start(form) }}
+    {{ form_errors(form) }}
+
+    {{ form_errors(form.name) }}
+    {{ form_label(form.name) }}
+    {{ form_widget(form.name, {'attr': {'style': 'width:80%'}}) }}
+    <br />
+
+    {{ form_errors(form.contents) }}
+    {{ form_label(form.contents) }}
+    {{ form_widget(form.contents, {'attr': {'rows': 30, 'style': 'width:80%'}}) }}
+    <br />
+    {{ form_rest(form) }}
+    <input type="submit" class="btn btn-primary" value="{{ 'add'|trans }}">
+{{ form_end(form) }}

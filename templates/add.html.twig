@@ -1,0 +1,14 @@
+{% extends 'layout.html.twig' %}
+{% block title %}{{ 'add'|trans }}{% endblock %}
+{% block content %}
+	<h1>{{ site_name }}</h1>
+    {% include 'add_form.html.twig' %}
+{% endblock %}
+{% block scripts %}
+    <script>
+    var editor = CodeMirror.fromTextArea(document.getElementById("script_contents"), {
+      lineNumbers: true,
+      mode: 'lua'
+    });
+    </script>
+{% endblock %}

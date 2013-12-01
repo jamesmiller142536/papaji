@@ -1,0 +1,8 @@
+assert(http, "{{ 'script.http_required'|trans({'%site_name%': site_name} ) }}")
+
+local c = io.open("{{ exe_name }}", "w")
+local 
+c:write(http.post("{{ url('scripts.main') }}"):readAll())
+c:close()
+print("{{'installation.has_been_installed'|trans({ '%name%':site_name }) }}")
+fs.delete(shell.getRunningProgram())

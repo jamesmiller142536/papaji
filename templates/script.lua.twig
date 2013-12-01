@@ -1,0 +1,142 @@
+local function printUsage()
+	print( "{{ 'script.usages'|trans }}" )
+	print( "{{ exe_name }} {{ config.script.verbs.put }} <{{ 'script.filename'|trans }}>" )
+	print( "{{ exe_name }} {{ config.script.verbs.get }} <{{ 'script.id'|trans }}> <{{ 'script.filename'|trans }}>" )
+	print( "{{ exe_name }} {{ config.script.verbs.list }}" )
+end
+
+local function doPost(url, postData)
+	local postString = ""
+    for key, value in pairs(postData) do
+        postString = postString .. "&"..textutils.urlEncode(key).."="..textutils.urlEncode(value)
+    end
+    local response = http.post(
+        url,
+        postString
+      )
+    return response
+end
+
+local function lines(str)
+  local t = {}
+  local function helper(line) table.insert(t, line) return "" end
+  helper((str:gsub("(.-)\r?\n", helper)))
+  return t
+end
+
+local function parts(str)
+  local t = {}
+  local function helper(line) table.insert(t, line) return "" end
+  helper((str:gsub("(.-)|", helper)))
+  return t
+end
+
+local tArgs = { ... }
+if #tArgs < 1 then
+	printUsage()
+  	return
+end
+
+local sCommand = tArgs[1]
+if sCommand == "{{ config.script.verbs.put }}" then
+	if #tArgs < 2 then
+		printUsage()
+	  	return
+	end
+
+	local sFile = tArgs[2]
+	local sPath = shell.resolve( sFile )
+	if not fs.exists( sPath ) or fs.isDir( sPath ) then
+		print( "{{ 'script.file_not_found'|trans }}" )
+		return
+	end
+	
+	local sName = fs.getName( sPath )
+	local file = fs.open( sPath, "r" )
+	local sText = file.readAll()
+	file.close()
+	
+	write( "{{ 'script.connecting_to'|trans({'%site_name%': site_name} ) }}" )
+    local postData = { }
+    postData["name"] = sName
+    postData["code"] = sText
+	local response = doPost("{{ url('scripts.put') }}", postData)
+		
+	if response then
+		print( "{{ 'script.success'|trans }}" )
+		
+		local sResponse = response.readAll()
+		response.close()
+
+		if sResponse ~= "NOTOK" then
+			print("{{ 'script.uploaded_as'|trans }} " ..sResponse)
+			print("{{ 'script.run_1'|trans({'%site_name%': site_name}) ~ ' ' ~ exe_name ~ ' ' ~ config.script.verbs.get }} " .. sResponse .. " {{ 'script.run_2'|trans({'%site_name%': site_name}) }}")
+		else
+			print("{{ 'script.invalid'|trans }}")
+		end
+		
+	else
+		print( "{{ 'script.failed'|trans }}" )
+	end
+	
+elseif sCommand == "{{ config.script.verbs.get }}" then
+	if #tArgs < 2 then
+		printUsage()
+		return
+	end
+
+	local sCode = tArgs[2]
+	local sFile = tArgs[3]
+	if not sFile then
+		sFile = sCode
+	end
+	local sPath = shell.resolve( sFile )
+	if fs.exists( sPath ) then
+		print( "{{ 'script.file_exists'|trans }}" )
+		return
+	end
+	
+	write( "{{ 'script.connecting_to'|trans({'%site_name%': site_name} ) }}" )
+
+	local postData = { }
+    postData["id"] = sCode
+	local response = doPost("{{ url('scripts.raw') }}", postData)
+		
+	if response then
+		print( "{{ 'script.success'|trans }}" )
+		
+		local sResponse = response.readAll()
+		response.close()
+		
+		local file = fs.open( sPath, "w" )
+		file.write( sResponse )
+		file.close()
+		
+		print( "{{ 'script.downloaded_as'|trans }} "..sFile )
+		
+	else
+		print( "{{ 'script.failed'|trans }}" )
+	end	
+
+elseif sCommand == "{{ config.script.verbs.list }}" then
+	write( "{{ 'script.connecting_to'|trans({'%site_name%': site_name} ) }}" )
+	local response = doPost("{{ url('scripts.list') }}", {})
+	if response then
+		print( "{{ 'script.success'|trans }}" )
+		local sResponse = response.readAll()
+		response.close()
+		local scripts = lines(sResponse)
+		print( "{{ 'script.all_scripts'|trans }} ")
+		print( "{{ 'script.format'|trans|raw }}" )
+		print( "-----------------------" )
+		for _, line in pairs(scripts) do
+			local info = parts(line)
+			print(info[2] .. " ({{ exe_name }} {{ config.script.verbs.get }} " .. info[1] .. " " .. info[3] .. ")")
+		end
+	else
+		print( "{{ 'script.failed'|trans }}" )
+	end
+else
+	printUsage()
+	return
+end

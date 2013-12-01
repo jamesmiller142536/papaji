@@ -1,0 +1,32 @@
+{
+    "name": "koesie10/ccv",
+    "description": "CCV for ComputerCraft server",
+    "keywords": ["ccv", "computercraft", "minecraft", "tekkit", "ftb"],
+    "authors": [
+        {
+            "name": "koesie10",
+            "email": "info@koesie10.eu",
+            "homepage": "http://koesie10.eu"
+        }
+    ],
+    "require": {
+        "silex/silex": "v1.1.2",
+		"twig/twig": "v1.14.2",
+		"symfony/yaml": "~2.3",
+        "symfony/config": "~2.3",
+        "symfony/twig-bridge": "~2.3",
+        "symfony/security": "~2.3",
+        "symfony/locale": "~2.3",
+        "symfony/validator": "~2.3",
+    	"symfony/translation": "~2.3",
+    	"symfony/form": "~2.3",
+        "symfony/finder": "~2.3",
+        "doctrine/orm": "2.4.1",
+		"easybook/geshi": "dev-master",
+        "monolog/monolog": "1.7.0",
+        "easybook/geshi": "1.0.8.12"
+    },
+    "autoload": {
+        "psr-0": {"": "src/"}
+    }
+}

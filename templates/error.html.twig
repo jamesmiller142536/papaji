@@ -1,0 +1,13 @@
+{% extends 'layout.html.twig' %}
+{% block title %}{{ ( 'errors.' ~ code)|trans }}{% endblock %}
+{% block content %}
+<div class="alert alert-danger">
+	<a class="close" aria-hidden="true" href="{{ path('index') }}">&times;</a>
+	<h1>{{ site_name }}</h1>
+	<h4>{{ code }} {{ ( 'errors.' ~ code)|trans }}</h4>
+	<p>{{ error.message }}</p>
+	<p>
+	  <a href="{{ path('index') }}" class="btn btn-danger">{{ 'back_to_homepage'|trans }}</a>
+	</p>
+</div>
+{% endblock %}

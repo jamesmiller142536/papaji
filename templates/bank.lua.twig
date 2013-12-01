@@ -1,0 +1,94 @@
+-- transfer money from one account to another
+function transfer(iAmount, sFrom, iPin, sTo)
+    postData = { }
+    postData["username"] = sFrom
+    postData["amount"] = iAmount
+    postData["pin"] = iPin
+    postData["to"] = sTo
+    local response = doPost("{{ url('bank.pay') }}", postData)
+    if response then
+        return response;
+    else
+        return false
+    end
+end
+
+-- get balance from a user
+function balance(sUsername)
+    postData = { }
+    postData["username"] = sUsername
+    local response = doPost("{{ url('bank.balance') }}", postData)
+    if response then
+        return response;
+    else
+        return false
+    end
+end
+
+-- add the daily amount to the specified user authenticated by the pin
+function daily(sUsername, iPin)
+    postData = { }
+    postData["username"] = sUsername
+    postData["pin"] = iPin
+    local response = doPost("{{ url('bank.daily') }}", postData)
+    if response then
+        return response;
+    else
+        return false
+    end
+end
+
+-- get all balances
+function allbalance()
+    postData = { }
+    local response = doPost("{{ url('bank.allbalance') }}", postData)
+    if response then
+        users = {}
+        for user in string.gmatch(response, "[^\r\n]+") do
+            t = {}
+            for x in string.gmatch(user, "%S+") do
+                table.insert(t, x)
+            end
+            table.insert(users, t)
+        end
+        return users;
+    else
+        return false
+    end
+end
+
+function tryLogin(sUsername, iPin)
+    postData = { }
+    postData["username"] = sUsername
+    postData["pin"] = iPin
+    local response = doPost("{{ url('bank.check') }}", postData)
+    if response and response == "OK" then
+        return true
+    else
+        return false
+    end
+end
+
+function doPost(url, postData)
+    local postString = ""
+    for key, value in pairs(postData) do
+        postString = postString .. "&"..textutils.urlEncode(key).."="..textutils.urlEncode(value)
+    end
+    local response = http.post(
+        url,
+        postString
+      )
+    if response then
+        local sResponse = response.readAll()
+        response.close()
+        return sResponse;
+    else
+        return false
+    end
+end
+
+--- Pads str to length len with char from right
+function lpad(str, len, char)
+    if char == nil then char = ' ' end
+    return str .. string.rep(char, len - #str)
+end

@@ -1,0 +1,88 @@
+invalid_username: PLEASE ENTER A VALID USERNAME!
+bank:
+  title: 'Bank'
+  invalid_amount: PLEASE ENTER A VALID AMOUNT!
+  invalid_pin: INVALID PIN CODE!
+  invalid_receiver: INVALID USER FOR TRANSFERRING!
+  new_pin: YOUR NEW PIN IS: %pin%
+  new_balance: YOUR NEW BALANCE IS $%balance%
+  balance_too_low: YOU DO NOT HAVE ENOUGH MONEY
+  double_daily: ALREADY GOT YOUR AMOUNT!
+ticket:
+  invalid_type: INVALID TICKET TYPE
+  invalid_slug: INVALID SLUG
+  invalid_amount: INVALID AMOUNT
+  already_exists: TICKET TYPE ALREADY EXISTS
+add: Add
+username: Username
+balance: Balance
+save: Save
+home: Home
+scripts: Scripts
+unknown_script: Unknown script
+script_update_success: Updating script succeeded!
+script_update_failure: Failed to update script.
+back_to_homepage: Back to homepage
+api:
+  title: API
+  experimental: Experimental
+  code: Code
+  introduction: 'It looks like this program has an API that can be used by external developers.'
+  installation: 'Download the API with <code>%exe_name% get %id% %stripped_name%</code> and then load the API by using:'
+  usage: 'Usage'
+  available_functions: 'The following functions are available:'
+  arguments: 'Arguments'
+  no_arguments: "This function doesn't have any arguments."
+  easy_bootstrap: 'Easy bootstrap'
+  easy_bootstrap_why: 'You can place the following bootstrap at the top of your script to make sure this API is installed. If this API is not installed, it will download the API.'
+installation:
+  title: Installation
+  pastebin: 'To use this package manager, you will first need to download %title%. This can be done by copying (or typing) the following command in the terminal of the (advanced) computer or turtle:<br /> <code>pastebin get %pastebin_id% install</code><br /> Execute <code>install</code>. Now you can use %title%. To see its usages, use <code>%exe_name%</code>. The commands needed to download the packages can be found on this website.'
+  no_pastebin: 'To use this package manager, you will need to copy the following script into your computer after executing <code>edit install</code>:'
+  has_been_installed: %name% has been installed for you. This file has been deleted.
+form:
+  title: Title
+  script: Script
+script:
+  usages: 'Usages:'
+  filename: filename
+  id: id
+  file_not_found: 'No such file'
+  file_exists: 'File already exists'
+  connecting_to: Connecting to %site_name%...
+  run_1: 'Run'
+  run_2: 'to run anywhere'
+  uploaded_as: 'Uploaded as'
+  downloaded_as: 'Downloaded as'
+  invalid: 'Invalid script'
+  failed: 'Failed.'
+  success: 'Success.'
+  all_scripts: 'All scripts:'
+  format: 'Format: <name> (<command>)'
+  main: Main Script
+  http_required: 'HTTP API is required for %site_name%. See http://computercraft.info/wiki/HTTP_(API) for how to enable.'
+errors:
+  400: Bad Request
+  401: Unauthorized
+  402: Payment Required
+  403: Forbidden
+  404: Page Not Found
+  405: Method Not Allowed
+  406: Not Acceptable
+  407: Proxy Authentication Required
+  408: Request Timeout
+  409: Conflict
+  410: Gone
+  411: Length Required
+  412: Precondition Failed
+  413: Request Entity Too Large
+  414: Request-URI Too Long
+  415: Unsupported Media Type
+  416: Requested Range Not Satisfiable
+  417: Expectation Failed
+  500: Internal Server Error
+  501: Not Implemented
+  502: Bad Gateway
+  503: Service Unavailable
+  504: Gateway Timeout
+  505: HTTP Version Not Supported

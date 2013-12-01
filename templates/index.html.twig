@@ -1,0 +1,38 @@
+{% extends 'layout.html.twig' %}
+{% set pastebin = app.user_config.pastebin_id %}
+{% set use_pastebin = (pastebin is not null and pastebin|length > 0) %}
+{% block title %}{{ 'home'|trans }}{% endblock %}
+{% block content %}
+	<h1>{{ site_name }}</h1>
+	<ul class="nav nav-tabs">
+	  <li class="active"><a href="#scripts" data-toggle="tab" id="scripts_link">{{ 'scripts'|trans }}</a></li>
+	  <li><a href="#installation" data-toggle="tab" id="installation_link">{{ 'installation.title'|trans }}</a></li>
+	  {% if config.features.bank %}
+	  <li><a href="#bank" data-toggle="tab" id="bank_link">{{ 'bank.title'|trans }}</a></li>
+	  {% endif %}
+	  <li><a href="{{ path('scripts.add') }}" class="btn btn-success">{{ 'add'|trans }}</a></li>
+	</ul>
+
+	<div class="tab-content">
+		<div id="scripts" class="tab-pane active">
+			{% for script in scripts %}
+			<h2><a href="{{ path('scripts.show', { 'id': script.id, 'slug': script.slug }) }}"> {{ script.name }}</a> <code>{{ exe_name }} {{ config.script.verbs.get }} {{ script.id }} {{ script.strippedName }}</code></h2>
+			{% endfor %}
+		</div>
+
+		<div id="installation" class="tab-pane">
+			{% if use_pastebin %}
+				<p>{{ 'installation.pastebin'|trans({ '%title%':site_name, '%pastebin_id%':pastebin, '%exe_name%':exe_name })|raw }}
+				</p>
+			{% else %}
+				<p>{{ 'installation.no_pastebin'|trans({ '%title%':site_name, '%pastebin_id%':pastebin, '%exe_name%':exe_name })|raw }}</p>
+				{{ render(path('scripts.install'))|geshi }}
+			{% endif %}
+		</div>
+		{% if config.features.bank %}
+			<div id="bank" class="tab-pane">
+				{{ render(path('bank.content')) }}
+			</div>
+		{% endif %}
+	</div>
+{% endblock %}

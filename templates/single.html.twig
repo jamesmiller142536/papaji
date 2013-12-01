@@ -1,0 +1,70 @@
+{% extends 'layout.html.twig' %}
+
+{% set functions = script.functions %}
+{% set has_functions = (functions is not null and functions|length > 0) %}
+
+{% block title %}{{ script.name }}{% endblock %}
+{% block content %}
+	<h1>{{ script.name }} <code>{{ exe_name }} {{ config.script.verbs.get }} {{ script.id }} {{ script.strippedName }}</code></h1>
+	<p>
+		<a class="btn btn-default" href="{{ path('index') }}"><i class="glyphicon glyphicon-arrow-left"></i> {{ 'back_to_homepage'|trans }}</a>
+		&nbsp;
+		<a class="btn btn-primary" href="{{ path('scripts.add') }}">{{ 'add'|trans }}</a>
+	</p>
+
+	<ul class="nav nav-tabs">
+	  <li class="active"><a href="#code" data-toggle="tab">{{ 'api.code'|trans }}</a></li>
+	  {% if has_functions %}
+	  	<li><a href="#api" data-toggle="tab">{{ 'api.title'|trans }} <span class="label label-warning">{{ 'api.experimental'|trans }}</span></a></li>
+	  {% endif %}
+	</ul>
+	<div class="tab-content">
+		<div id="code" class="tab-pane active">
+			{{ contents|geshi }}
+		</div>
+		{% if has_functions %}
+		<div id="api" class="tab-pane">
+			<p class="lead">{{ 'api.introduction'|trans }}</p>
+			<h2>{{ 'installation.title'|trans }}</h2>
+			<p>{{ 'api.installation'|trans({'%exe_name%':exe_name , '%id%':script.id, '%stripped_name%':script.strippedName})|raw }}</p>
+			{{ ('os.loadAPI("' ~ script.strippedName ~ '")')|geshi }}
+			<h2>{{ 'api.usage'|trans }}</h2>
+			<p>{{ 'api.available_functions'|trans }}</p>
+			{% for function in functions %}
+				<div>
+					<h3 id="{{ function.name }}">{{ function.name }}</h3>
+					<p>{{ (script.strippedName ~ '.' ~ function.name ~ '(' ~ implode(', ', function.args) ~ ')')|geshi }}</p>
+					<h4>{{ 'api.arguments'|trans }}</h4>
+					{% if function.args|length > 0 %}
+						<ul>
+							{% for key, arg in function.args %}
+								<li><code>{{ arg }}</code> <span class="label label-info">{{ function.types[key] }}</span></li>
+							{% endfor %}
+						</ul>
+					{% else %}
+						<p>{{ 'api.no_arguments'|trans }}</p>
+					{% endif %}
+				</div>
+			{% endfor %}
+			<h2>{{ 'api.easy_bootstrap'|trans }}</h2>
+			<p>{{ 'api.easy_bootstrap_why'|trans }}</p>
+							{{
+('API_NAME = "' ~ script.strippedName ~ '"
+API_ID = ' ~ script.id ~ '
+if not fs.exists("' ~ exe_name ~ '") then
+  local c = io.open("' ~ exe_name ~ '", "w")
+  c:write(http.post("' ~ url('scripts.main') ~ '"):readAll())
+  c:close()
+  print("' ~ site_name ~ ' has been installed for you")
+end
+if not fs.exists(API_NAME) then
+  shell.run("' ~ exe_name ~ '", "get", API_ID, API_NAME)
+  print("API has been installed")
+end
+os.loadAPI(API_NAME)')|geshi
+						}}
+			</div>
+		</div>
+		{% endif %}
+	</div>
+{% endblock %}

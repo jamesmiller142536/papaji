@@ -1,0 +1,6 @@
+{% extends 'layout.html.twig' %}
+{% block title %}{{ 'bank.title'|trans }}{% endblock %}
+{% block content %}
+	<h1>{{ site_name }}</h1>
+	{{ render(path('bank.content')) }}
+{% endblock %}
