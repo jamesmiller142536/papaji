@@ -8,6 +8,7 @@ use CCV\FormType\ScriptType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class ScriptController extends BaseController {
@@ -120,7 +121,7 @@ class ScriptController extends BaseController {
 	    			return $this->plainResponse('');
 	    			break;
 	    	}
-	    	$subRequest = Request::create($this->app['url_generator']->generate($subUrl));
+	    	$subRequest = Request::create($this->app['url_generator']->generate($subUrl, array(), UrlGeneratorInterface::ABSOLUTE_URL));
 	    	return $this->app->handle($subRequest, HttpKernelInterface::SUB_REQUEST, false);
 	    }
 	    return $this->returnScript($script);
