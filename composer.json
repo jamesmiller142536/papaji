@@ -21,7 +21,7 @@
     	"symfony/translation": "~2.3",
     	"symfony/form": "~2.3",
         "symfony/finder": "~2.3",
-        "doctrine/orm": "2.4.1",
+        "doctrine/orm": "2.4.8",
 		"easybook/geshi": "dev-master",
         "monolog/monolog": "1.7.0",
         "easybook/geshi": "1.0.8.12"
